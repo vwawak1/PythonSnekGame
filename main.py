@@ -23,7 +23,8 @@ running = True
 
 snake_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 snake_head = pygame.Rect(snake_pos.x - 10, snake_pos.y - 10, 20, 20)
-speed = 10
+speed = 5
+direction = "up"
 
 #Start the loop for the game
 while running:
@@ -38,25 +39,41 @@ while running:
 
     # Render here...
 
+    #Begin frame by drawing the rectangle
     pygame.draw.rect(screen, colors.GREEN, snake_head)
 
+    #Get key inputs for controls
     keys = pygame.key.get_pressed()
+
+    #Series of checks depending on the state of wasd
     if keys[pygame.K_w]:
-        snake_pos.y -= speed
+        direction = "up"
     if keys[pygame.K_s]:
-        snake_pos.y += speed
+        direction = "down"
     if keys[pygame.K_a]:
-        snake_pos.x -= speed
+        direction = "left"
     if keys[pygame.K_d]:
+        direction = "right"
+    
+    if direction == "up":
+        snake_pos.y -= speed
+    if direction == "down":
+        snake_pos.y += speed
+    if direction == "left":
+        snake_pos.x -= speed
+    if direction == "right":
         snake_pos.x += speed
-    snake_head.update(snake_pos.x, snake_pos.y, 20, 20)
 
 
+    #Call update method to change position of player character        
+    snake_head.update(snake_pos.x + speed, snake_pos.y, 20, 20)
+    
+    
     # .flip() to display work on screen
     pygame.display.flip()
 
     # Determines framerate
-    clock.tick(20)
+    clock.tick(60)
 
 
 
