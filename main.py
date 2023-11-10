@@ -4,16 +4,67 @@
 
 import pygame
 import sys
-from comps import colors
 
 # https://www.pygame.org/docs/
 # Initialize pygame
 pygame.init()
-#Create a screen
-screen = pygame.display.set_mode((600,600))
-#Draw out the screen
-width = 50
-height = 50
+
+#Game variables
+CELL_SIZE = 20
+CELL_COUNT = 25
+SCREEN_SIZE = CELL_COUNT * CELL_SIZE
+BACKGROUND_COLOR = (68,93,72)
+GREEN = (121,172,40)
+
+direction = "stop"
+
+#Create screen
+screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+
+# Methods
+
+def draw_grid(screen, width, height, cell_size):
+    for y in range(0,height, cell_size):
+        for x in range(0, width, cell_size):
+            rect = pygame.Rect(x, y, cell_size, cell_size)
+            pygame.draw.rect(screen, BACKGROUND_COLOR, rect, 1)
+
+def up():
+    if direction != "down":
+        direction = "up"
+
+def down():
+    if direction != "up":
+        direction = "down"
+
+def left():
+    if direction != "right":
+        direction = "left"
+
+def right():
+    if direction != "left":
+        direction = "right"
+
+
+def movement():
+    if direction == "up":
+        snake_pos.y -= speed
+    
+    if direction == "down":
+        snake_pos.y += speed
+    
+    if direction == "left":
+        snake_pos.x -= speed
+    
+    if direction == "right":
+        snake_pos.x += speed
+    
+    if direction == "stop":
+        snake_pos.x = snake_pos.x
+        snake_pos.y = snake_pos.y
+
+    snake_head.update(snake_pos.x + speed, snake_pos.y, 20, 20)
+    
 
 
 #Set a clock
@@ -24,7 +75,17 @@ running = True
 snake_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 snake_head = pygame.Rect(snake_pos.x - 10, snake_pos.y - 10, 20, 20)
 speed = 5
-direction = "up"
+
+
+
+
+
+
+
+
+
+
+
 
 #Start the loop for the game
 while running:
@@ -34,13 +95,16 @@ while running:
             running = False
 
     # Add bg color
-    screen.fill(colors.BACKGROUND_COLOR)
+    screen.fill(BACKGROUND_COLOR)
     # Add play space
 
     # Render here...
 
-    #Begin frame by drawing the rectangle
-    pygame.draw.rect(screen, colors.GREEN, snake_head)
+    #Begin frame by drawing the grid
+    
+    draw_grid(screen, SCREEN_SIZE, SCREEN_SIZE, CELL_SIZE)
+
+    pygame.draw.rect(screen, GREEN, snake_head)
 
     #Get key inputs for controls
     keys = pygame.key.get_pressed()
@@ -54,19 +118,9 @@ while running:
         direction = "left"
     if keys[pygame.K_d]:
         direction = "right"
+
     
-    if direction == "up":
-        snake_pos.y -= speed
-    if direction == "down":
-        snake_pos.y += speed
-    if direction == "left":
-        snake_pos.x -= speed
-    if direction == "right":
-        snake_pos.x += speed
-
-
-    #Call update method to change position of player character        
-    snake_head.update(snake_pos.x + speed, snake_pos.y, 20, 20)
+    movement()
     
     
     # .flip() to display work on screen
