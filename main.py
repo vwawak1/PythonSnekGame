@@ -2,6 +2,7 @@
 # Main file for a snake game using pygame
 # JMJ
 
+import random
 import pygame
 import sys
 
@@ -15,8 +16,10 @@ CELL_COUNT = 25
 SCREEN_SIZE = CELL_COUNT * CELL_SIZE
 BACKGROUND_COLOR = (68,93,72)
 GREEN = (121,172,40)
+RED = (255, 0, 0)
 
 direction = "stop"
+snack_check = False
 
 #Create screen
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
@@ -64,8 +67,15 @@ def movement():
         snake_pos.y = snake_pos.y
 
     snake_head.update(snake_pos.x + speed, snake_pos.y, 20, 20)
-    
 
+def generate_snack():
+    print("Snack Generator!")
+    x = random.randint(10, SCREEN_SIZE-10)
+    y = random.randint(10, SCREEN_SIZE-10)
+    return pygame.draw.rect(screen, RED, rect=(x, y, 15, 15))
+
+def draw_snack(snack):
+    pygame.draw.rect(screen, RED, snack)
 
 #Set a clock
 clock = pygame.time.Clock()
@@ -75,15 +85,6 @@ running = True
 snake_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 snake_head = pygame.Rect(snake_pos.x - 10, snake_pos.y - 10, 20, 20)
 speed = 5
-
-
-
-
-
-
-
-
-
 
 
 
@@ -119,7 +120,11 @@ while running:
     if keys[pygame.K_d]:
         direction = "right"
 
-    
+    if snack_check == False:
+        snack = generate_snack()
+        snack_check = True
+    else:
+        draw_snack(snack)
     movement()
     
     
