@@ -32,22 +32,6 @@ def draw_grid(screen, width, height, cell_size):
             rect = pygame.Rect(x, y, cell_size, cell_size)
             pygame.draw.rect(screen, BACKGROUND_COLOR, rect, 1)
 
-def up():
-    if direction != "down":
-        direction = "up"
-
-def down():
-    if direction != "up":
-        direction = "down"
-
-def left():
-    if direction != "right":
-        direction = "left"
-
-def right():
-    if direction != "left":
-        direction = "right"
-
 
 def movement():
     if direction == "up":
@@ -66,7 +50,7 @@ def movement():
         snake_pos.x = snake_pos.x
         snake_pos.y = snake_pos.y
 
-    snake_head.update(snake_pos.x + speed, snake_pos.y, 20, 20)
+    snake_head.update(snake_pos.x, snake_pos.y, 20, 20)
 
 def generate_snack():
     print("Snack Generator!")
@@ -112,28 +96,31 @@ while running:
 
     #Series of checks depending on the state of wasd
     if keys[pygame.K_w]:
-        direction = "up"
+        if direction != "down":
+            direction = "up"
     if keys[pygame.K_s]:
-        direction = "down"
+        if direction != "up":
+            direction = "down"
     if keys[pygame.K_a]:
-        direction = "left"
+        if direction != "right":
+            direction = "left"
     if keys[pygame.K_d]:
-        direction = "right"
+        if direction != "left":
+            direction = "right"
 
     if snack_check == False:
         snack = generate_snack()
         snack_check = True
     else:
         draw_snack(snack)
-    movement()
     
+    movement()
     
     # .flip() to display work on screen
     pygame.display.flip()
 
     # Determines framerate
     clock.tick(60)
-
 
 
 #Once the game loop has ended, quit
